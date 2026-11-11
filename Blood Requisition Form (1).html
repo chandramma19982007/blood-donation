@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Blood Requisition Form</title>
+<style>
+:root{--bg:#faf6f5;--card:#fff;--text:#2a1b1b;--muted:#7a6666;--border:#e4d6d4;--red:#c0172b;--red-d:#9c1223;--err:#b3261e;--ok:#1f7a3d;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#1a1212;--card:#251a1a;--text:#f5eaea;--muted:#b49c9c;--border:#4a3636;--red:#e5384d;--red-d:#c92a3d;--err:#ff8a80;--ok:#6fd08c}}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#1a1212;--card:#251a1a;--text:#f5eaea;--muted:#b49c9c;--border:#4a3636;--red:#e5384d;--red-d:#c92a3d;--err:#ff8a80;--ok:#6fd08c}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.5}
+.wrap{max-width:560px;margin:0 auto;padding:20px 16px 40px}
+h1{font-size:1.45rem;margin:8px 0 4px;color:var(--red)}
+h2{font-size:1rem;margin:0 0 12px;color:var(--red)}
+p.sub{margin:0 0 18px;color:var(--muted)}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:16px}
+.field{display:flex;flex-direction:column;margin-bottom:13px}
+label,.lbl{font-weight:600;font-size:.88rem;margin-bottom:5px}
+label span,.lbl span{color:var(--muted);font-weight:400}
+input,select,textarea{font:inherit;color:var(--text);background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;width:100%}
+textarea{resize:vertical;min-height:64px}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--red);outline-offset:1px}
+.invalid{border-color:var(--err)}
+.error{color:var(--err);font-size:.82rem;min-height:1.1em;margin-top:3px}
+.row{display:flex;gap:12px}.row .field{flex:1;min-width:0}
+@media (max-width:420px){.row.wrapm{flex-direction:column;gap:0}}
+.cap{text-transform:uppercase}
+.seg{display:flex;gap:10px}
+.seg label{flex:1;display:flex;align-items:center;justify-content:center;gap:7px;border:1.5px solid var(--border);border-radius:10px;padding:10px;margin:0;font-weight:500;cursor:pointer;background:var(--bg)}
+.seg input{width:auto;margin:0;accent-color:var(--red)}
+.comp{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border)}
+.comp:last-child{border:0}
+.comp .n{flex:1;font-size:.9rem}.comp .n small{display:block;color:var(--muted)}
+.comp input{width:76px;text-align:center}
+.comp em{font-style:normal;color:var(--muted);font-size:.85rem}
+button{font:inherit;font-weight:600;background:var(--red);color:#fff;border:0;border-radius:10px;padding:13px;width:100%;cursor:pointer}
+button:hover{background:var(--red-d)}
+button.ghost{background:transparent;color:var(--red);border:1.5px solid var(--red);margin-top:10px}
+.note{font-size:.85rem;color:var(--muted)}
+.note ol{margin:6px 0 10px;padding-left:20px}
+.warn{background:var(--bg);border-left:4px solid var(--red);padding:10px 12px;border-radius:6px;font-size:.88rem;margin-bottom:12px}
+.hidden{display:none}
+.tick{font-size:2.3rem;color:var(--ok);text-align:center}
+.sum div{display:flex;justify-content:space-between;gap:14px;padding:6px 0;border-bottom:1px solid var(--border);font-size:.9rem}
+.sum b{color:var(--muted);font-weight:600;flex:none}.sum span{text-align:right;word-break:break-word}
+@media print{button,.noprint{display:none!important}body{background:#fff;color:#000}.card{border:0}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div id="formView">
+  <h1>🩸 Blood Requisition Form</h1>
+  <p class="sub">Request for blood and blood components. Fields marked * are required.</p>
+
+  <div class="warn"><b>Unlabelled samples and unsigned forms will not be accepted.</b></div>
+
+  <form id="form" novalidate>
+    <div class="card">
+      <h2>Patient details</h2>
+      <div class="field">
+        <label for="name">Patient’s name * <span>(in capital letters)</span></label>
+        <input id="name" class="cap" type="text" autocomplete="off" placeholder="FULL NAME">
+        <div class="error" id="e-name"></div>
+      </div>
+      <div class="row wrapm">
+        <div class="field">
+          <label for="age">Age *</label>
+          <input id="age" type="number" inputmode="numeric" min="0" max="120" placeholder="Years">
+          <div class="error" id="e-age"></div>
+        </div>
+        <div class="field">
+          <label for="sex">Sex *</label>
+          <select id="sex"><option value="">Select…</option><option>Male</option><option>Female</option><option>Other</option></select>
+          <div class="error" id="e-sex"></div>
+        </div>
+        <div class="field">
+          <label for="bg">Blood group &amp; Rh *</label>
+          <select id="bg"><option value="">Select…</option><option>A+</option><option>A−</option><option>B+</option><option>B−</option><option>AB+</option><option>AB−</option><option>O+</option><option>O−</option><option>Not known</option></select>
+          <div class="error" id="e-bg"></div>
+        </div>
+      </div>
+      <div class="field">
+        <label for="addr">Address *</label>
+        <textarea id="addr" placeholder="House / street, city, district, PIN"></textarea>
+        <div class="error" id="e-addr"></div>
+      </div>
+      <div class="field" id="pregF" style="display:none">
+        <label for="preg">If patient is female: history of pregnancy</label>
+        <input id="preg" type="text" placeholder="e.g. G2 P1 L1, or not applicable">
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Hospital &amp; clinical details</h2>
+      <div class="field">
+        <label for="hosp">Hospital name *</label>
+        <input id="hosp" type="text">
+        <div class="error" id="e-hosp"></div>
+      </div>
+      <div class="field">
+        <label for="doc">Doctor name *</label>
+        <input id="doc" type="text">
+        <div class="error" id="e-doc"></div>
+      </div>
+      <div class="field">
+        <label for="diag">Clinical diagnosis *</label>
+        <input id="diag" type="text">
+        <div class="error" id="e-diag"></div>
+      </div>
+      <div class="field">
+        <label for="reason">Reasons for transfusion *</label>
+        <input id="reason" type="text">
+        <div class="error" id="e-reason"></div>
+      </div>
+      <div class="row wrapm">
+        <div class="field"><label for="hb">Hb <span>(gm%)</span></label><input id="hb" type="number" step="0.1" min="0" inputmode="decimal"></div>
+        <div class="field"><label for="plt">Plt <span>(count/cmm)</span></label><input id="plt" type="number" min="0" inputmode="numeric"></div>
+        <div class="field"><label for="wbc">WBC count</label><input id="wbc" type="number" min="0" inputmode="numeric"></div>
+      </div>
+      <div class="field">
+        <div class="lbl">Routine or emergency? *</div>
+        <div class="seg">
+          <label><input type="radio" name="urg" value="Routine"> Routine</label>
+          <label><input type="radio" name="urg" value="Emergency"> Emergency</label>
+        </div>
+        <div class="error" id="e-urg"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Previous transfusion</h2>
+      <div class="field">
+        <div class="lbl">History of previous transfusion? *</div>
+        <div class="seg">
+          <label><input type="radio" name="prev" value="Yes"> Yes</label>
+          <label><input type="radio" name="prev" value="No"> No</label>
+        </div>
+        <div class="error" id="e-prev"></div>
+      </div>
+      <div id="prevMore" class="hidden">
+        <div class="field">
+          <label for="pabo">If yes: ABO group &amp; Rh</label>
+          <select id="pabo"><option value="">Select…</option><option>A+</option><option>A−</option><option>B+</option><option>B−</option><option>AB+</option><option>AB−</option><option>O+</option><option>O−</option><option>Not known</option></select>
+        </div>
+        <div class="field">
+          <label for="react">Reaction, if any</label>
+          <input id="react" type="text" placeholder="Describe, or write None">
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Blood &amp; components required *</h2>
+      <p class="note" style="margin:-4px 0 6px">Enter the number of units for each item needed.</p>
+      <div id="comps"></div>
+      <div class="error" id="e-comps"></div>
+    </div>
+
+    <div class="card">
+      <h2>Indent details</h2>
+      <div class="row wrapm">
+        <div class="field"><label for="idate">Date of indent *</label><input id="idate" type="date"><div class="error" id="e-idate"></div></div>
+        <div class="field"><label for="itime">Time *</label><input id="itime" type="time"><div class="error" id="e-itime"></div></div>
+      </div>
+      <div class="row wrapm">
+        <div class="field"><label for="rdate">Required on *</label><input id="rdate" type="date"><div class="error" id="e-rdate"></div></div>
+        <div class="field"><label for="rtime">At *</label><input id="rtime" type="time"><div class="error" id="e-rtime"></div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Medical officer</h2>
+      <div class="field">
+        <label for="mo">Name &amp; signature of medical officer *</label>
+        <input id="mo" type="text" placeholder="Type full name as signature">
+        <div class="error" id="e-mo"></div>
+      </div>
+      <div class="field">
+        <label for="desig">Designation &amp; stamp / registration no. *</label>
+        <input id="desig" type="text" placeholder="e.g. Consultant Physician, Reg. No. 12345">
+        <div class="error" id="e-desig"></div>
+      </div>
+      <div class="field" style="flex-direction:row;gap:10px;align-items:flex-start">
+        <input id="consent" type="checkbox" style="width:20px;height:20px;margin-top:3px;accent-color:var(--red)">
+        <label for="consent" style="font-weight:400;margin:0">I confirm informed consent for blood transfusion has been obtained from the patient / guardian. *</label>
+      </div>
+      <div class="error" id="e-consent"></div>
+    </div>
+
+    <div class="card note">
+      <h2>Instructions</h2>
+      <ol>
+        <li>Send 2 ml of EDTA &amp; 2 ml of PLAIN patient’s blood sample.</li>
+        <li>Blood sample label with name and IP/OP no.</li>
+        <li>Cross matching tests may take up to 2 hrs.</li>
+        <li>Blood components issued once will not be taken back.</li>
+        <li>Informed consent for blood transfusion should be obtained from the patient / guardian.</li>
+      </ol>
+      <b>Important note:</b> Serology tests are done by the chemiluminescence method.
+    </div>
+
+    <button type="submit">Submit requisition</button>
+  </form>
+</div>
+
+<div id="doneView" class="hidden">
+  <div class="card">
+    <div class="tick">✓</div>
+    <h1 style="text-align:center">Requisition submitted</h1>
+    <p class="sub" style="text-align:center">Review the details below. Remember to send a labelled blood sample with this form.</p>
+    <div class="sum" id="sum"></div>
+    <button class="ghost" id="print" type="button">Print / save as PDF</button>
+    <button class="ghost" id="again" type="button">New requisition</button>
+  </div>
+</div>
+</div>
+
+<script>
+(function(){
+  var $=function(i){return document.getElementById(i)};
+  var COMPS=[["wb","Whole Human Blood","WB"],["prbc","Packed Red Blood Cells (PCV)","PRBC"],["ffp","Fresh Frozen Plasma","FFP","All coagulation factors, albumin"],["plt","Platelet Concentrate","PLT"],["wrbc","Saline Washed Red Blood Cells","WRBC"],["cryo","Cryoprecipitate Anti-Haemophilic Factor","CRYO","Factor VIII, VWF, Factor XIII &amp; fibrinogen"],["sdp1","Plateletpheresis – Single Donor Platelet","SDP"],["sdp2","Plateletpheresis – Single Donor Platelet","SDP"]];
+  var box=$("comps");
+  COMPS.forEach(function(c,i){
+    var d=document.createElement("div");d.className="comp";
+    d.innerHTML='<div class="n">'+(i+1)+'. '+c[1]+' <b>('+c[2]+')</b>'+(c[3]?'<small>'+c[3]+'</small>':'')+'</div><input type="number" min="0" max="20" inputmode="numeric" id="c-'+c[0]+'" placeholder="0" aria-label="'+c[1]+' units"><em>Units</em>';
+    box.appendChild(d);
+  });
+
+  function setErr(id,m){var e=$("e-"+id);if(e)e.textContent=m||"";var f=$(id);if(f)f.classList.toggle("invalid",!!m)}
+  var req=function(msg){return function(v){return String(v).trim()?"":msg}};
+  var rules={
+    name:function(v){v=v.trim();return v.length<2?"Enter the patient’s name.":/^[A-Za-z .'-]+$/.test(v)?"":"Use capital letters A–Z only."},
+    age:function(v){return v===""?"Age is required.":(+v<0||+v>120)?"Enter a valid age.":""},
+    sex:req("Select sex."),bg:req("Select blood group."),addr:req("Address is required."),
+    hosp:req("Hospital name is required."),doc:req("Doctor name is required."),
+    diag:req("Clinical diagnosis is required."),reason:req("Reason for transfusion is required."),
+    idate:req("Date of indent is required."),itime:req("Time is required."),
+    rdate:req("Required-on date is needed."),rtime:req("Required-at time is needed."),
+    mo:req("Medical officer’s name is required."),desig:req("Designation / stamp is required.")
+  };
+  function radio(n){var r=document.querySelector('input[name="'+n+'"]:checked');return r?r.value:""}
+  function chk(id){var m=rules[id]($(id).value);setErr(id,m);return !m}
+
+  Object.keys(rules).forEach(function(id){
+    $(id).addEventListener("blur",function(){chk(id)});
+    $(id).addEventListener("input",function(){if($("e-"+id).textContent)chk(id)});
+  });
+  $("name").addEventListener("input",function(){this.value=this.value.toUpperCase()});
+  $("sex").addEventListener("change",function(){$("pregF").style.display=this.value==="Female"?"flex":"none"});
+  document.querySelectorAll('input[name="prev"]').forEach(function(r){r.addEventListener("change",function(){$("prevMore").classList.toggle("hidden",radio("prev")!=="Yes");setErr("prev","")})});
+  document.querySelectorAll('input[name="urg"]').forEach(function(r){r.addEventListener("change",function(){setErr("urg","")})});
+  box.addEventListener("input",function(){setErr("comps","")});
+
+  function now(){
+    var d=new Date(),p=function(n){return String(n).padStart(2,"0")};
+    var day=d.getFullYear()+"-"+p(d.getMonth()+1)+"-"+p(d.getDate());
+    $("idate").value=day;$("itime").value=p(d.getHours())+":"+p(d.getMinutes());$("rdate").min=day;
+  }
+  now();
+
+  $("form").addEventListener("submit",function(e){
+    e.preventDefault();
+    var ok=true,first=null;
+    function bad(id){ok=false;if(!first)first=id}
+    Object.keys(rules).forEach(function(id){if(!chk(id))bad(id)});
+    if(!radio("urg")){setErr("urg","Select routine or emergency.");bad("urg")}else setErr("urg","");
+    if(!radio("prev")){setErr("prev","Select yes or no.");bad("prev")}else setErr("prev","");
+    var items=[];COMPS.forEach(function(c,i){var v=parseInt($("c-"+c[0]).value,10);if(v>0)items.push((i+1)+". "+c[1].replace(/&amp;/g,"&")+" ("+c[2]+"): "+v+" unit"+(v>1?"s":""))});
+    if(!items.length){setErr("comps","Enter units for at least one item.");bad("comps")}
+    if(!$("consent").checked){setErr("consent","Consent confirmation is required.");bad("consent")}else setErr("consent","");
+    if(!ok){var t=$(first)||document.querySelector('input[name="'+first+'"]')||$("comps");t.scrollIntoView({behavior:"smooth",block:"center"});if(t.focus&&first!=="comps"&&first!=="urg"&&first!=="prev")t.focus();return}
+
+    var rows=[["Patient",$("name").value.trim()],["Age / Sex",$("age").value+" / "+$("sex").value],["Blood group & Rh",$("bg").value],["Address",$("addr").value.trim()]];
+    if($("sex").value==="Female"&&$("preg").value.trim())rows.push(["Pregnancy history",$("preg").value.trim()]);
+    rows.push(["Hospital",$("hosp").value.trim()],["Doctor",$("doc").value.trim()],["Diagnosis",$("diag").value.trim()],["Reason",$("reason").value.trim()]);
+    var lab=[];if($("hb").value)lab.push("Hb "+$("hb").value+" gm%");if($("plt").value)lab.push("Plt "+$("plt").value+"/cmm");if($("wbc").value)lab.push("WBC "+$("wbc").value);
+    if(lab.length)rows.push(["Lab values",lab.join(", ")]);
+    rows.push(["Priority",radio("urg")],["Previous transfusion",radio("prev")]);
+    if(radio("prev")==="Yes"){rows.push(["Previous ABO / Rh",$("pabo").value||"—"],["Reaction",$("react").value.trim()||"—"])}
+    rows.push(["Components",items.join("\n")],["Indent",$("idate").value+" at "+$("itime").value],["Required",$("rdate").value+" at "+$("rtime").value],["Medical officer",$("mo").value.trim()],["Designation / stamp",$("desig").value.trim()],["Consent","Confirmed"]);
+    var s=$("sum");s.innerHTML="";
+    rows.forEach(function(r){var d=document.createElement("div"),a=document.createElement("b"),b=document.createElement("span");a.textContent=r[0];b.textContent=r[1];b.style.whiteSpace="pre-line";d.appendChild(a);d.appendChild(b);s.appendChild(d)});
+    $("formView").classList.add("hidden");$("doneView").classList.remove("hidden");window.scrollTo(0,0);
+  });
+  $("print").addEventListener("click",function(){window.print()});
+  $("again").addEventListener("click",function(){
+    $("form").reset();$("pregF").style.display="none";$("prevMore").classList.add("hidden");
+    document.querySelectorAll(".error").forEach(function(e){e.textContent=""});
+    document.querySelectorAll(".invalid").forEach(function(e){e.classList.remove("invalid")});
+    now();$("doneView").classList.add("hidden");$("formView").classList.remove("hidden");window.scrollTo(0,0);
+  });
+})();
+</script>
+</body>
+</html>
